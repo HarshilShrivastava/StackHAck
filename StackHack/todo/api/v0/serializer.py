@@ -5,4 +5,9 @@ from todo.models import(
 class TodoSerializer(serializers.ModelSerializer):
     class Meta:
         model=todo
-        fields=['Title','Description','Created_at','']
+        exclude=('User','Created_at')
+
+class TodoReadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=todo
+        fields='__all__'
