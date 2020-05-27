@@ -11,3 +11,8 @@ class TodoReadSerializer(serializers.ModelSerializer):
     class Meta:
         model=todo
         fields='__all__'
+
+class SetreminderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=todo
+        fields=['Remind']

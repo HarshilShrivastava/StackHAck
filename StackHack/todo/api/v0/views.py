@@ -21,7 +21,8 @@ from django.contrib.auth import (
 )
 from .serializer import(
     TodoSerializer,
-    TodoReadSerializer
+    TodoReadSerializer,
+    SetreminderSerializer
 )
 
 class Todo(APIView):
@@ -107,4 +108,31 @@ class Tododetail(APIView):
         context['message']="sucessfully deleted"
         context['data']=data
         return Response(context)
-
+@api_view(('PUT',))
+@permission_classes((IsAuthenticated,))
+def update(request,id):
+    context={}
+    data={}
+    try:
+        obj=get_object_or_404(todo,pk=id)
+    except:
+        context['status']=400
+        context['sucess']=False
+        context['message']="not  found"
+        context['data']=data
+        return Response(context)
+    serializer=SetreminderSerializer(data=request.data)
+    if serializer.is_valid():
+        obj.Remind=serializer.validated_data['Remind']
+        obj.save()
+        context['status']=200
+        context['sucess']=True
+        context['message']="sucessfully updated"
+        context['data']=data
+        return Response(context)
+    else:
+        context['status']=400
+        context['sucess']=False
+        context['message']="Wrong format"
+        context['data']=data
+        return Response(context)
