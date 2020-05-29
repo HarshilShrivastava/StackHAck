@@ -26,7 +26,7 @@ class todo(models.Model):
     Remind=models.DateTimeField(null=True,blank=True)
     Status = models.ForeignKey(Status, on_delete=models.CASCADE)
     Color = models.ForeignKey(Tags, on_delete=models.CASCADE)
-    label = models.ForeignKey(Priority, on_delete=models.CASCADE,null=True,blank=True)
+    label = models.ForeignKey(Priority, on_delete=models.CASCADE)
     DueDate=models.DateTimeField(null=True,blank=True)
     Is_Archeived=models.BooleanField()
 
