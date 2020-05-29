@@ -33,7 +33,7 @@ class Todo(APIView):
         data={}
         serializer=TodoSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(User=request.user)
+            serializer.save(User=request.user,Is_Archeived=False)
             context['status']=200
             context['sucess']=True
             context['message']="sucessfully created"
@@ -50,7 +50,8 @@ class Todo(APIView):
     def get(self,request,*args,**kwargs):
         context={}
         data={}
-        qs=get_list_or_404(todo,User=request.user)
+        qs=todo.objects.filter(User=request.user)
+        qs=qs.filter(Is_Archeived=False)
         serializer=TodoReadSerializer(qs,many=True)
         context['status']=200
         context['sucess']=True
@@ -136,3 +137,40 @@ def update(request,id):
         context['message']="Wrong format"
         context['data']=data
         return Response(context)
+
+@api_view(('PUT',))
+@permission_classes((IsAuthenticated,))
+def Put_in_Archeieve(request,id):
+    data={}
+    context={}
+    try:
+        obj=get_object_or_404(todo,pk=id)
+    except:
+        context['status']=400
+        context['sucess']=False
+        context['message']="not  found"
+        context['data']=data
+        return Response(context)
+    obj.Is_Archeived=True
+    obj.save()
+    context['status']=200
+    context['sucess']=True
+    context['message']="sucessfully updated"
+    context['data']=data
+    return Response(context)
+
+
+
+@api_view(['GET', ])
+@permission_classes((IsAuthenticated, ))
+def ArcheieveList(request):
+    data={}
+    context={}
+    qs=todo.objects.filter(Is_Archeived=True).filter(User=request.user)
+    serializer=TodoReadSerializer(qs,many=True)
+    context['status']=200
+    context['sucess']=True
+    context['message']="sucessfully created"
+    data=serializer.data
+    context['data']=data
+    return Response(context)
