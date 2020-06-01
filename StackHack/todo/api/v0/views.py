@@ -1,6 +1,8 @@
 from todo.models import(
     todo
 )
+
+
 from rest_framework.response import Response
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
@@ -21,11 +23,44 @@ from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth import (
     get_user_model,
 )
+from django_filters.rest_framework import DjangoFilterBackend
+
+from rest_framework import viewsets
+
 from .serializer import(
     TodoSerializer,
     TodoReadSerializer,
     SetreminderSerializer
 )
+from rest_framework import generics
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
+
+class TodoListViewset(generics.ListAPIView):
+    queryset = todo.objects.all()
+    serializer_class = TodoReadSerializer
+    http_method_names = ['get']
+    filter_backends = (filters.SearchFilter, DjangoFilterBackend)
+    search_fields = ['Title','Description']
+    filter_fields = ('Status','Color','label',)
+
+
+
+    def list(self, request, *args, **kwargs):
+        self.object_list=self.filter_queryset(self.get_queryset())
+        context={}
+        qs=self.object_list
+        qs=qs.filter(User=request.user)
+        data={}
+        serializer=TodoReadSerializer(qs,many=True)
+        data=serializer.data
+        context['sucess']=True
+        context['status']=200
+        context['message']="sucessfull get"
+        context['count']=qs.count()
+        context['data']=data
+        return Response(context)
+
 
 class Todo(APIView):
     permission_classes=[IsAuthenticated]
