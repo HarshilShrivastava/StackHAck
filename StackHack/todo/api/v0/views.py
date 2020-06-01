@@ -3,6 +3,8 @@ from todo.models import(
 )
 from rest_framework.response import Response
 from rest_framework import status
+from django_filters.rest_framework import DjangoFilterBackend
+
 from django.shortcuts import get_object_or_404,get_list_or_404
 from rest_framework.decorators import (
     api_view,
@@ -28,6 +30,7 @@ from .serializer import(
 class Todo(APIView):
     permission_classes=[IsAuthenticated]
     authentication_classes=(TokenAuthentication,)
+    
     def post(self,request,*args,**kwargs):
         context={}
         data={}
@@ -138,8 +141,8 @@ def update(request,id):
         context['data']=data
         return Response(context)
 
-@api_view(('PUT',))
-@permission_classes((IsAuthenticated,))
+@api_view(['PUT', ])
+@permission_classes((AllowAny, ))
 def Put_in_Archeieve(request,id):
     data={}
     context={}

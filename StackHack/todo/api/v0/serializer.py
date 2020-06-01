@@ -13,7 +13,6 @@ class TodoReadSerializer(serializers.ModelSerializer):
     label=serializers.SerializerMethodField('get_label')
     class Meta:
         model=todo
- #       fields='__all__'
         fields=['id','Title','Description','Created_at','Remind','DueDate','Status','Color','label']
     def get_Status(self,info):
         Data=info.Status.label
