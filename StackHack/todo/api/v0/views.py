@@ -212,3 +212,25 @@ def ArcheieveList(request):
     data=serializer.data
     context['data']=data
     return Response(context)
+
+
+@api_view(['PUT', ])
+@permission_classes((AllowAny, ))
+def remove_from_archeieve(request,id):
+    data={}
+    context={}
+    try:
+        obj=get_object_or_404(todo,pk=id)
+    except:
+        context['status']=400
+        context['sucess']=False
+        context['message']="not  found"
+        context['data']=data
+        return Response(context)
+    obj.Is_Archeived=False
+    obj.save()
+    context['status']=200
+    context['sucess']=True
+    context['message']="sucessfully removed"
+    context['data']=data
+    return Response(context)
