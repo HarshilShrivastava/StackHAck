@@ -51,6 +51,7 @@ class TodoListViewset(generics.ListAPIView):
         context={}
         qs=self.object_list
         qs=qs.filter(User=request.user)
+        qs=qs.filter(Is_Archeived=False)
         data={}
         serializer=TodoReadSerializer(qs,many=True)
         data=serializer.data
