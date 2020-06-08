@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-
+from user.api.v0.views import index
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/',include('user.api.v0.urls')),
     path('Todo/',include('todo.api.v0.urls')),
+    path('',index,name="homepage")
 ]

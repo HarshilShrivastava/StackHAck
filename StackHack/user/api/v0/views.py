@@ -22,6 +22,8 @@ from .serializers import(
 RegistrationSerializer,
 LoginSerializer
 )
+from django.utils import timezone
+
 def validate_email(email):
     user = None
     try:
@@ -110,3 +112,11 @@ def ObtainAuthTokenView(request):
                 context['response'] = 'Error'
                 context['error_message'] = 'Invalid credentials'
         return Response(context)
+
+def index(request):
+    now = timezone.now()
+    context = {
+        'now': now,
+    }
+    # Render thHTML template index.html with the data in the context variable
+    return render(request, 'index.html', context=context)
